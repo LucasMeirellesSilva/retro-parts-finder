@@ -44,5 +44,9 @@ export default function gerarUrl({
       break;
   }
 
-  return `https://lista.mercadolivre.com.br/acessorios-veiculos/pecas-motos-quadriciclos/motor/${slug}_CustoFrete_Gratis_BRAND_12084392${paginaMl}${ordenacaoMl}_NoIndex_True`;
+  // const brandMl = `_BRAND_${mlKmpId}`
+  const brandMl = `_category=MLB45560`
+
+
+  return `https://lista.mercadolivre.com.br/${slug}_CustoFrete_Gratis${brandMl}${paginaMl}${ordenacaoMl}_NoIndex_True`;
 }

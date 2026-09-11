@@ -6,6 +6,7 @@ import {
   regraPistaoSemAneis,
   regraSemCamisaOuCilindro,
   regraNaoJogoDeAneis,
+  regraSemTermosExcluidos,
 } from "../regras";
 
 const buscaPistao: ConfiguracaoBusca = {
@@ -16,6 +17,11 @@ const buscaPistao: ConfiguracaoBusca = {
     regraPistaoSemAneis,
     regraSemCamisaOuCilindro,
     regraNaoJogoDeAneis,
+    regraSemTermosExcluidos([
+      "junta",
+      "juntas",
+      "biela",
+    ]),
   ],
 };
 

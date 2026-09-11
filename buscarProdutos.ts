@@ -1,6 +1,6 @@
 import { Produto } from ".";
-import normalizarTexto from "./search/normalizarTexto";
-import { ConfiguracaoMedidas, extrairMedida } from "./medidas";
+import normalizarTexto from "./util/normalizarTexto";
+import { ConfiguracaoMedidas, extrairMedidas } from "./medidas";
 
 export interface ContextoBusca {
   produto: Produto;
@@ -36,19 +36,21 @@ export default function buscarProdutos(
     grupos = {};
 
     for (const produto of filtrados) {
-      const medida =
-        extrairMedida(produto.titulo, config.tipoMedida) ?? "null";
+      const medidas = extrairMedidas(
+        produto.titulo,
+        config.tipoMedida,
+      );
 
-      grupos[medida] ??= [];
-      grupos[medida].push(produto);
-    }
+      if (medidas.length === 0) {
+        grupos["null"] ??= [];
+        grupos["null"].push(produto);
+        continue;
+      }
 
-    for (const grupo of Object.values(grupos)) {
-      grupo.sort((a, b) => {
-        const precoA = Number(a.preco.replace(/\D/g, ""));
-        const precoB = Number(b.preco.replace(/\D/g, ""));
-        return precoA - precoB;
-      });
+      for (const medida of medidas) {
+        grupos[medida] ??= [];
+        grupos[medida].push(produto);
+      }
     }
   }
 

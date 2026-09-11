@@ -1,11 +1,12 @@
-import { chromium } from "playwright";
+import { chromium, Page } from "playwright";
 
-import gerarUrl from "./search/gerarUrl";
+import gerarUrl from "./util/gerarUrl";
 import { codigoParaMedida, formatarMedida } from "./medidas";
 import buscarProdutos from "./buscarProdutos";
 import buscaPistao from "./buscas/pistao";
 import buscaPistaoComAnel from "./buscas/pistaoComAnel";
 import buscaGenerica from "./buscas/generica";
+import buscaAneis from "./buscas/anel";
 
 export type Produto = {
   titulo: string;
@@ -13,53 +14,42 @@ export type Produto = {
   link: string;
 };
 
-const pesquisaInput = "Pistão Dt 180";
-const medidaInput = "050";
+const pesquisaInput = "";
+const medidaInput = "";
 
 type ScrapperArgs = {
+  page: Page;
   pesquisa: string;
   paginaAtual: number;
   medida?: string;
   resultados?: {
     filtrados: Produto[];
-    grupos: Record<string, Produto[]> | undefined;
+    grupos: Record<string, Produto[]>;
   };
 };
 
+const context = await chromium.launchPersistentContext("./scraping-ml", {
+  headless: false,
+});
+
+await context.addInitScript(() => {
+  Object.defineProperty(Navigator.prototype, "webdriver", {
+    get() {
+      return false;
+    },
+    configurable: true,
+  });
+});
+
+const page = context.pages()[0] ?? (await context.newPage());
+
 async function testar({
+  page,
   pesquisa,
   paginaAtual = 1,
   medida,
-  resultados = { filtrados: [], grupos: undefined },
+  resultados = { filtrados: [], grupos: {} },
 }: ScrapperArgs): Promise<void> {
-  const context = await chromium.launchPersistentContext("./edge-perfil-ml-2", {
-    headless: false,
-    channel: "msedge",
-  });
-
-  await context.addInitScript(() => {
-    Object.defineProperty(Navigator.prototype, "webdriver", {
-      get() {
-        return false;
-      },
-      configurable: true,
-    });
-  });
-
-  const page = context.pages()[0] ?? (await context.newPage());
-
-  const metalLeveId = 10718678;
-  const kmpId = 12084392;
-  const audaxId = 2786154;
-  const hondaId = 60559;
-  const cofapId = 2431718;
-  const yamahaId = 6351;
-  const tokoId = 11022724;
-  const genericaId = 276243;
-  const rikId = 12274940;
-  const suloyId = 12228342;
-  const kimId = 9118848;
-
   const pesquisaComMedida =
     pesquisa + " " + (medida ? codigoParaMedida(medida) : "");
 
@@ -82,9 +72,9 @@ async function testar({
     );
   });
 
-  // if (await page.locator(".ui-search-rescue").isVisible()) {
-  //   return [];
-  // }
+  if (await page.locator(".ui-search-rescue").isVisible()) {
+    console.log("Nenhum resultado encontrado para página " + paginaAtual);
+  }
 
   const produtos: Produto[] = await page
     .locator(".poly-card__content")
@@ -104,8 +94,7 @@ async function testar({
       }),
     );
 
-  const palavrasObrigatorias = ["Dt", "180"];
-  // const palavrasOpcionais: string[] = [];
+  const palavrasObrigatorias = [""];
 
   const resultadoAtual = buscarProdutos(
     produtos,
@@ -131,29 +120,34 @@ async function testar({
   };
 
   const totalResultados = medida
-  ? (resultados.grupos?.[medida]?.length ?? 0)
-  : resultados.filtrados.length;
+    ? (resultados.grupos?.[medida]?.length ?? 0)
+    : resultados.filtrados.length;
 
   const minimoResultados = medida ? 3 : 10;
 
-if (totalResultados < minimoResultados) {
-  console.log("Poucos resultados encontrados, buscando na próxima página.");
-
-  if (paginaAtual < 3) {
-    await testar({
+  if (totalResultados < minimoResultados && paginaAtual < 3) {
+    return testar({
+      page,
       pesquisa,
       paginaAtual: paginaAtual + 1,
       medida,
       resultados,
     });
   }
-}
 
-  console.log("\nTotal encontrados:", produtos.length);
-  console.log("Após filtro:", resultados.filtrados.length);
+  console.log("\nTotal encontrados:", resultados.filtrados.length);
+
+  if (medida && Object.keys(resultados.grupos).length > 0) {
+    console.log(
+      "Encontrados com medida específicada: ",
+      resultados.grupos[medida].length ?? "Nenhum resultado encontrado.",
+    );
+  }
 
   if (resultados.grupos && Object.keys(resultados.grupos).length > 0) {
-    console.log("\nResultados agrupados por medida:\n");
+    if (!medida) {
+      console.log("\nResultados agrupados por medida:\n");
+    }
 
     for (const [medidaGrupo, produtosGrupo] of Object.entries(
       resultados.grupos,
@@ -187,10 +181,15 @@ if (totalResultados < minimoResultados) {
 
   process.stdin.resume();
 
-  process.stdin.on("data", async () => {
+  process.stdin.once("data", async () => {
     await context.close();
     process.exit(0);
   });
 }
 
-testar({ pesquisa: pesquisaInput, paginaAtual: 1, medida: medidaInput }).catch(console.error);
+testar({
+  page: page,
+  pesquisa: pesquisaInput,
+  paginaAtual: 1,
+  medida: medidaInput,
+}).catch(console.error);

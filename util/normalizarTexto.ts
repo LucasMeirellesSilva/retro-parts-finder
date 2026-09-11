@@ -3,5 +3,5 @@
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "")
       .toLowerCase()
-      .replace(/[.,]/g, "."); // vírgula e ponto viram ponto
+      .replace(/[,]/g, "."); // vírgula vira ponto
   }
