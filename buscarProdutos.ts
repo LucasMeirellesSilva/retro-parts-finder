@@ -1,11 +1,11 @@
-import { Produto } from ".";
-import normalizarTexto from "./util/normalizarTexto";
-import { ConfiguracaoMedidas, extrairMedidas } from "./medidas";
+import { Produto } from "./src/index.js";
+import normalizarTexto from "./util/normalizarTexto.js";
+import { ConfiguracaoMedidas, extrairMedidas } from "./medidas.js";
 
 export interface ContextoBusca {
   produto: Produto;
   titulo: string;
-  palavrasObrigatorias: string[];
+  termosObrigatorios: string[];
 }
 
 export type RegraBusca = (ctx: ContextoBusca) => boolean;
@@ -17,14 +17,14 @@ export interface ConfiguracaoBusca {
 
 export default function buscarProdutos(
   produtos: Produto[],
-  palavrasObrigatorias: string[],
+  termosObrigatorios: string[],
   config: ConfiguracaoBusca,
 ) {
   const filtrados = produtos.filter((produto) => {
     const ctx: ContextoBusca = {
       produto,
       titulo: normalizarTexto(produto.titulo),
-      palavrasObrigatorias,
+      termosObrigatorios,
     };
 
     return config.regras.every((regra) => regra(ctx));

@@ -1,5 +1,5 @@
-import { ContextoBusca, RegraBusca } from "./buscarProdutos";
-import normalizarTexto from "./util/normalizarTexto";
+import { ContextoBusca, RegraBusca } from "./buscarProdutos.js";
+import normalizarTexto from "./util/normalizarTexto.js";
 
 function primeiraOcorrencia(texto: string, palavras: string[]) {
   let menor = -1;
@@ -15,9 +15,9 @@ function primeiraOcorrencia(texto: string, palavras: string[]) {
   return menor;
 }
 
-export const regraPesquisa: RegraBusca = ({ titulo, palavrasObrigatorias }) =>
-  palavrasObrigatorias.every((palavra) =>
-    titulo.includes(normalizarTexto(palavra)),
+export const regraPesquisa: RegraBusca = ({ titulo, termosObrigatorios }) =>
+  termosObrigatorios.every((termo) =>
+    titulo.includes(normalizarTexto(termo)),
   );
 
 export const regraPistao: RegraBusca = ({ titulo }) =>

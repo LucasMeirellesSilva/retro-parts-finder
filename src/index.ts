@@ -1,12 +1,13 @@
 import { chromium, Page } from "playwright";
 
-import gerarUrl from "./util/gerarUrl";
-import { codigoParaMedida, formatarMedida } from "./medidas";
-import buscarProdutos from "./buscarProdutos";
-import buscaPistao from "./buscas/pistao";
-import buscaPistaoComAnel from "./buscas/pistaoComAnel";
-import buscaGenerica from "./buscas/generica";
-import buscaAneis from "./buscas/anel";
+import gerarUrl from "../util/gerarUrl.js";
+import { codigoParaMedida, formatarMedida } from "../medidas.js";
+import buscarProdutos from "../buscarProdutos.js";
+import { buscaPistao, buscaPistaoComAnel } from "../buscas/pistao.js";
+import { buscaEixoPrimario } from "../buscas/eixo.js"
+import { buscaEngrenagem1AMotora, buscaEngrenagem2AMotora, buscaEngrenagem3A4AMotora } from "../buscas/engrenagem.js"
+import buscaGenerica from "../buscas/generica.js";
+import buscaAneis from "../buscas/anel.js";
 
 export type Produto = {
   titulo: string;
@@ -14,7 +15,7 @@ export type Produto = {
   link: string;
 };
 
-const pesquisaInput = "";
+const pesquisaInput = "Engrenagem Motora 2 Dt 180";
 const medidaInput = "";
 
 type ScrapperArgs = {
@@ -41,7 +42,7 @@ await context.addInitScript(() => {
   });
 });
 
-const page = context.pages()[0] ?? (await context.newPage());
+const page = context.pages()[0] ?? (await context.newPage())
 
 async function testar({
   page,
@@ -94,12 +95,12 @@ async function testar({
       }),
     );
 
-  const palavrasObrigatorias = [""];
+  const termosObrigatorios = ["engrenagem", "dt", "180"];
 
   const resultadoAtual = buscarProdutos(
     produtos,
-    palavrasObrigatorias,
-    buscaPistaoComAnel,
+    termosObrigatorios,
+    buscaEngrenagem2AMotora,
   );
 
   const gruposAcumulados = { ...(resultados.grupos ?? {}) };

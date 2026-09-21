@@ -1,4 +1,4 @@
-import gerarSlugPesquisa from "./gerarSlugPesquisa";
+import gerarSlugPesquisa from "./gerarSlugPesquisa.js";
 
 export enum Ordenacao {
   RELEVANCIA = "relevancia",
@@ -44,9 +44,11 @@ export default function gerarUrl({
       break;
   }
 
-  // const brandMl = `_BRAND_${mlKmpId}`
-  const brandMl = `_category=MLB45560`
+  // const marcaMl = `_BRAND_${12084392}`
+  const categoriaMl = `acessorios-veiculos/pecas-motos-quadriciclos/transmissao/engrenagens`
 
+  // const categoriaMl = ``
+  
 
-  return `https://lista.mercadolivre.com.br/${slug}_CustoFrete_Gratis${brandMl}${paginaMl}${ordenacaoMl}_NoIndex_True`;
+  return `https://lista.mercadolivre.com.br/${categoriaMl}${slug}_CustoFrete_Gratis${paginaMl}${ordenacaoMl}_NoIndex_True`;
 }

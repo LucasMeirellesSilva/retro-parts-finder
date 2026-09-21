@@ -1,5 +1,5 @@
-import { ConfiguracaoBusca } from "../buscarProdutos";
-import { MEDIDAS } from "../medidas";
+import { ConfiguracaoBusca } from "../buscarProdutos.js";
+import { MEDIDAS } from "../medidas.js";
 import {
   regraPesquisa,
   regraPistao,
@@ -7,9 +7,11 @@ import {
   regraSemCamisaOuCilindro,
   regraNaoJogoDeAneis,
   regraSemTermosExcluidos,
-} from "../regras";
+  regraPistaoComAneis,
+  regraNaoIncompleto,
+} from "../regras.js";
 
-const buscaPistao: ConfiguracaoBusca = {
+export const buscaPistao: ConfiguracaoBusca = {
   tipoMedida: MEDIDAS.PISTAO,
   regras: [
     regraPesquisa,
@@ -25,4 +27,19 @@ const buscaPistao: ConfiguracaoBusca = {
   ],
 };
 
-export default buscaPistao;
+export const buscaPistaoComAnel: ConfiguracaoBusca = {
+  tipoMedida: MEDIDAS.PISTAO,
+  regras: [
+    regraPesquisa,
+    regraPistao,
+    regraPistaoComAneis,
+    regraNaoIncompleto,
+    regraSemCamisaOuCilindro,
+    regraNaoJogoDeAneis,
+    regraSemTermosExcluidos([
+      "junta",
+      "juntas",
+      "biela",
+    ]),
+  ],
+};

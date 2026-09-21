@@ -1,10 +1,9 @@
-import { ConfiguracaoBusca } from "../buscarProdutos";
-import { regraPesquisa, regraSemTermosExcluidos } from "../regras";
+import { ConfiguracaoBusca } from "../buscarProdutos.js";
+import { regraPesquisa } from "../regras.js";
 
 const buscaGenerica: ConfiguracaoBusca = {
   regras: [
     regraPesquisa,
-    // regraSemTermosExcluidos(["mola", "retentor", "chaveta"]),
   ],
 };
 
