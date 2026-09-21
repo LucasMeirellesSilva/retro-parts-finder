@@ -1,5 +1,5 @@
-import { ConfiguracaoBusca } from "../buscarProdutos.js";
-import { MEDIDAS } from "../medidas.js";
+import { ConfiguracaoBusca } from "../busca/buscarProdutos.js";
+import { MEDIDAS } from "../extratores/medidas.js";
 import {
   regraPesquisa,
   regraAneis,
@@ -7,7 +7,7 @@ import {
   regraNaoIncompleto,
   regraSemCamisaOuCilindro,
   regraSemTermosExcluidos,
-} from "../regras.js";
+} from "../busca/regras.js";
 
 const buscaAneis: ConfiguracaoBusca = {
   tipoMedida: MEDIDAS.ANEL,

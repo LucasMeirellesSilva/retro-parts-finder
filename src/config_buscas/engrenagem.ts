@@ -1,6 +1,6 @@
-import { ConfiguracaoBusca } from "../buscarProdutos.js";
-import { regraPesquisa, regraSemTermosExcluidos } from "../regras.js";
-import { MARCHAS, Marcha } from "../marchas.js";
+import { ConfiguracaoBusca } from "../busca/buscarProdutos.js";
+import { regraPesquisa, regraSemTermosExcluidos } from "../busca/regras.js";
+import { MARCHAS, Marcha } from "../extratores/marchas.js";
 
 const termosExcluidosEngCambio = [
   "partida",

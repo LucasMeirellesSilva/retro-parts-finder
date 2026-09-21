@@ -1,6 +1,6 @@
-import { Produto } from "./src/index.js";
-import normalizarTexto from "./util/normalizarTexto.js";
-import { ConfiguracaoMedidas, extrairMedidas } from "./medidas.js";
+import { Produto } from "../index.js";
+import normalizarTexto from "../util/normalizarTexto.js";
+import { ConfiguracaoMedidas, extrairMedidas } from "../extratores/medidas.js";
 
 export interface ContextoBusca {
   produto: Produto;

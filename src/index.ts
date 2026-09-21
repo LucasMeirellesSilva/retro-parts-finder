@@ -1,13 +1,13 @@
 import { chromium, Page } from "playwright";
 
-import gerarUrl from "../util/gerarUrl.js";
-import { codigoParaMedida, formatarMedida } from "../medidas.js";
-import buscarProdutos from "../buscarProdutos.js";
-import { buscaPistao, buscaPistaoComAnel } from "../buscas/pistao.js";
-import { buscaEixoPrimario } from "../buscas/eixo.js"
-import { buscaEngrenagem1AMotora, buscaEngrenagem2AMotora, buscaEngrenagem3A4AMotora } from "../buscas/engrenagem.js"
-import buscaGenerica from "../buscas/generica.js";
-import buscaAneis from "../buscas/anel.js";
+import gerarUrl from "./util/gerarUrl.js";
+import { codigoParaMedida, formatarMedida } from "./extratores/medidas.js";
+import buscarProdutos from "./busca/buscarProdutos.js";
+import { buscaPistao, buscaPistaoComAnel } from "../config_buscas/pistao.js";
+import { buscaEixoPrimario } from "./config_buscas/eixo.js"
+import { buscaEngrenagem1AMotora, buscaEngrenagem2AMotora, buscaEngrenagem3A4AMotora } from "./config_buscas/engrenagem.js"
+import buscaGenerica from "./config_buscas/generica.js";
+import buscaAneis from "./config_buscas/anel.js";
 
 export type Produto = {
   titulo: string;

@@ -1,5 +1,5 @@
 import { ContextoBusca, RegraBusca } from "./buscarProdutos.js";
-import normalizarTexto from "./util/normalizarTexto.js";
+import normalizarTexto from "./src/util/normalizarTexto.js";
 
 function primeiraOcorrencia(texto: string, palavras: string[]) {
   let menor = -1;

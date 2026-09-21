@@ -1,5 +1,5 @@
-import { ConfiguracaoBusca } from "../buscarProdutos.js";
-import { MEDIDAS } from "../medidas.js";
+import { ConfiguracaoBusca } from "../busca/buscarProdutos.js";
+import { MEDIDAS } from "../extratores/medidas.js";
 import {
   regraPesquisa,
   regraPistao,
@@ -9,7 +9,7 @@ import {
   regraSemTermosExcluidos,
   regraPistaoComAneis,
   regraNaoIncompleto,
-} from "../regras.js";
+} from "../busca/regras.js";
 
 export const buscaPistao: ConfiguracaoBusca = {
   tipoMedida: MEDIDAS.PISTAO,
