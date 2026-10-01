@@ -28,7 +28,7 @@ export const MARCHAS = {
   },
 
   TERCEIRA_QUARTA: {
-    termos: ["dupla", "3/4", "3ª/4ª"],
+    termos: ["dupla", "3/4", "3a/4a", "3ª/4ª", "3º/4º", "3°/4°", "3*/4*"],
   },
 } satisfies Record<string, ConfiguracaoMarcha>;
 

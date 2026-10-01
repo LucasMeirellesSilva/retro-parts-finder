@@ -1,28 +1,19 @@
 import { chromium, Page } from "playwright";
 
-import gerarUrl from "./util/gerarUrl.js";
-import { codigoParaMedida, formatarMedida } from "./extratores/medidas.js";
+import gerarUrl from "./busca/gerarUrl.js";
 import buscarProdutos from "./busca/buscarProdutos.js";
-import { buscaPistao, buscaPistaoComAnel } from "../config_buscas/pistao.js";
-import { buscaEixoPrimario } from "./config_buscas/eixo.js"
-import { buscaEngrenagem1AMotora, buscaEngrenagem2AMotora, buscaEngrenagem3A4AMotora } from "./config_buscas/engrenagem.js"
-import buscaGenerica from "./config_buscas/generica.js";
-import buscaAneis from "./config_buscas/anel.js";
+import { Produto } from "./busca/tipos.js";
 
-export type Produto = {
-  titulo: string;
-  preco: string;
-  link: string;
-};
+import { buscaBalamcimB } from "./config_buscas/balancins.js";
 
-const pesquisaInput = "Engrenagem Motora 2 Dt 180";
-const medidaInput = "";
+const pesquisaInput = "Balancim B Xlx 250";
+const grupoInput = "";
 
 type ScrapperArgs = {
   page: Page;
   pesquisa: string;
   paginaAtual: number;
-  medida?: string;
+  grupo?: string;
   resultados?: {
     filtrados: Produto[];
     grupos: Record<string, Produto[]>;
@@ -42,20 +33,20 @@ await context.addInitScript(() => {
   });
 });
 
-const page = context.pages()[0] ?? (await context.newPage())
+const page = context.pages()[0] ?? (await context.newPage());
 
 async function testar({
   page,
   pesquisa,
   paginaAtual = 1,
-  medida,
-  resultados = { filtrados: [], grupos: {} },
+  grupo,
+  resultados = {
+    filtrados: [],
+    grupos: {},
+  },
 }: ScrapperArgs): Promise<void> {
-  const pesquisaComMedida =
-    pesquisa + " " + (medida ? codigoParaMedida(medida) : "");
-
   const url = gerarUrl({
-    pesquisa: medida ? pesquisaComMedida : pesquisa,
+    pesquisa,
     pagina: paginaAtual,
   });
 
@@ -74,7 +65,9 @@ async function testar({
   });
 
   if (await page.locator(".ui-search-rescue").isVisible()) {
-    console.log("Nenhum resultado encontrado para página " + paginaAtual);
+    console.log(
+      "Nenhum resultado encontrado para página " + paginaAtual,
+    );
   }
 
   const produtos: Produto[] = await page
@@ -85,7 +78,9 @@ async function testar({
           "a.poly-component__title",
         ) as HTMLAnchorElement | null;
 
-        const precoEl = card.querySelector(".andes-money-amount__fraction");
+        const precoEl = card.querySelector(
+          ".andes-money-amount__fraction",
+        );
 
         return {
           titulo: tituloEl?.textContent?.trim() ?? "",
@@ -95,17 +90,18 @@ async function testar({
       }),
     );
 
-  const termosObrigatorios = ["engrenagem", "dt", "180"];
+  const termosObrigatorios = ["xlx", "250"];
 
   const resultadoAtual = buscarProdutos(
     produtos,
     termosObrigatorios,
-    buscaEngrenagem2AMotora,
+    buscaBalamcimB,
   );
 
-  const gruposAcumulados = { ...(resultados.grupos ?? {}) };
+  const gruposAcumulados = {
+    ...resultados.grupos,
+  };
 
-  // Adiciona os grupos encontrados nesta busca
   for (const [nomeGrupo, produtosGrupo] of Object.entries(
     resultadoAtual.grupos ?? {},
   )) {
@@ -116,49 +112,46 @@ async function testar({
   }
 
   resultados = {
-    filtrados: [...resultados.filtrados, ...resultadoAtual.filtrados],
+    filtrados: [
+      ...resultados.filtrados,
+      ...resultadoAtual.filtrados,
+    ],
     grupos: gruposAcumulados,
   };
 
-  const totalResultados = medida
-    ? (resultados.grupos?.[medida]?.length ?? 0)
+  const totalResultados = grupo
+    ? (resultados.grupos[grupo]?.length ?? 0)
     : resultados.filtrados.length;
 
-  const minimoResultados = medida ? 3 : 10;
+  const minimoResultados = grupo ? 3 : 10;
 
-  if (totalResultados < minimoResultados && paginaAtual < 3) {
+  if (totalResultados < minimoResultados && paginaAtual < 5) {
     return testar({
       page,
       pesquisa,
       paginaAtual: paginaAtual + 1,
-      medida,
+      grupo,
       resultados,
     });
   }
 
-  console.log("\nTotal encontrados:", resultados.filtrados.length);
+  console.log(
+    "\nTotal encontrados:",
+    resultados.filtrados.length,
+  );
 
-  if (medida && Object.keys(resultados.grupos).length > 0) {
-    console.log(
-      "Encontrados com medida específicada: ",
-      resultados.grupos[medida].length ?? "Nenhum resultado encontrado.",
-    );
-  }
+  if (Object.keys(resultados.grupos).length > 0) {
+    console.log("\nResultados agrupados:\n");
 
-  if (resultados.grupos && Object.keys(resultados.grupos).length > 0) {
-    if (!medida) {
-      console.log("\nResultados agrupados por medida:\n");
-    }
-
-    for (const [medidaGrupo, produtosGrupo] of Object.entries(
+    for (const [nomeGrupo, produtosGrupo] of Object.entries(
       resultados.grupos,
     )) {
-      if (medida && medidaGrupo !== medida) {
+      if (grupo && nomeGrupo !== grupo) {
         continue;
       }
 
       console.log("\n====================");
-      console.log(`MEDIDA: ${formatarMedida(medidaGrupo)}`);
+      console.log(`GRUPO: ${nomeGrupo}`);
       console.log(`TOTAL: ${produtosGrupo.length}`);
       console.log("====================");
 
@@ -166,6 +159,7 @@ async function testar({
         console.log(`\n#${index + 1}`);
         console.log("Título:", produto.titulo);
         console.log("Preço: R$", produto.preco);
+        // console.log("Link:", produto.link);
       });
     }
   } else {
@@ -175,6 +169,7 @@ async function testar({
       console.log(`\n#${index + 1}`);
       console.log("Título:", produto.titulo);
       console.log("Preço: R$", produto.preco);
+      // console.log("Link:", produto.link);
     });
   }
 
@@ -189,8 +184,8 @@ async function testar({
 }
 
 testar({
-  page: page,
+  page,
   pesquisa: pesquisaInput,
   paginaAtual: 1,
-  medida: medidaInput,
+  grupo: grupoInput || undefined,
 }).catch(console.error);

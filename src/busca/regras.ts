@@ -1,5 +1,7 @@
-import { ContextoBusca, RegraBusca } from "./buscarProdutos.js";
-import normalizarTexto from "./src/util/normalizarTexto.js";
+import { RegraBusca } from "./tipos.js";
+import normalizarTexto from "../util/normalizarTexto.js";
+import { detectarIdentificadoresBalancim, IdentificadorBalancim } from "../detectores/identificadoresBalancim.js";
+import { detectarTipoValvula, TipoValvula } from "../detectores/tipoValvula.js";
 
 function primeiraOcorrencia(texto: string, palavras: string[]) {
   let menor = -1;
@@ -69,3 +71,22 @@ export const regraPistaoComAneis: RegraBusca = ({ titulo }) => {
     titulo.includes("aneis")
   );
 };
+
+export const regraEngrenagem: RegraBusca = ({ titulo }) =>
+  titulo.includes("engrenagem");
+
+export function regraPossuiIdentificadorBalancim(
+  identificador: IdentificadorBalancim,
+): RegraBusca {
+  return ({ titulo }) => {
+    return detectarIdentificadoresBalancim(titulo).includes(identificador);
+  };
+}
+
+export function regraPossuiTipoValvula(
+  tipo: TipoValvula,
+): RegraBusca {
+  return ({ titulo }) => {
+    return detectarTipoValvula(titulo) === tipo;
+  };
+}

@@ -1,3 +1,5 @@
+import { Extrator } from "../busca/tipos.js";
+
 export type ConfiguracaoMedidas = {
   inicial: number;
   final: number;
@@ -5,13 +7,7 @@ export type ConfiguracaoMedidas = {
 };
 
 export const MEDIDAS = {
-  PISTAO: {
-    inicial: 0.25,
-    final: 2.0,
-    passo: 0.25,
-  },
-
-  ANEL: {
+  PISTAO_OU_ANEL: {
     inicial: 0.25,
     final: 2.0,
     passo: 0.25,
@@ -119,4 +115,10 @@ export function extrairMedidas(
   }
 
   return medidasEncontradas;
+}
+
+export function criarExtratorMedidas(
+  config: ConfiguracaoMedidas,
+): Extrator<string> {
+  return (titulo: string) => extrairMedidas(titulo, config);
 }

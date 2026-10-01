@@ -45,7 +45,7 @@ export default function gerarUrl({
   }
 
   // const marcaMl = `_BRAND_${12084392}`
-  const categoriaMl = `acessorios-veiculos/pecas-motos-quadriciclos/transmissao/engrenagens`
+  const categoriaMl = `acessorios-veiculos/`
 
   // const categoriaMl = ``
   

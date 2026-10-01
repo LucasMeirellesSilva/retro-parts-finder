@@ -1,5 +1,5 @@
-import { ConfiguracaoBusca } from "../busca/buscarProdutos.js";
-import { MEDIDAS } from "../extratores/medidas.js";
+import { ConfiguracaoBusca } from "../busca/tipos.js";
+import { MEDIDAS, criarExtratorMedidas } from "../extratores/medidas.js";
 import {
   regraPesquisa,
   regraAneis,
@@ -9,8 +9,7 @@ import {
   regraSemTermosExcluidos,
 } from "../busca/regras.js";
 
-const buscaAneis: ConfiguracaoBusca = {
-  tipoMedida: MEDIDAS.ANEL,
+export const buscaAneis: ConfiguracaoBusca<string> = {
   regras: [
     regraPesquisa,
     regraAneis,
@@ -39,6 +38,6 @@ const buscaAneis: ConfiguracaoBusca = {
       "suspensao",
     ]),
   ],
+  extrator: criarExtratorMedidas(MEDIDAS.PISTAO_OU_ANEL),
+  chaveGrupo: (extracao) => extracao,
 };
-
-export default buscaAneis;

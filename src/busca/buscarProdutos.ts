@@ -1,24 +1,16 @@
-import { Produto } from "../index.js";
+import {
+  Produto,
+  ConfiguracaoBusca,
+  ResultadoExtracao,
+  ContextoBusca,
+} from "./tipos.js";
+
 import normalizarTexto from "../util/normalizarTexto.js";
-import { ConfiguracaoMedidas, extrairMedidas } from "../extratores/medidas.js";
 
-export interface ContextoBusca {
-  produto: Produto;
-  titulo: string;
-  termosObrigatorios: string[];
-}
-
-export type RegraBusca = (ctx: ContextoBusca) => boolean;
-
-export interface ConfiguracaoBusca {
-  regras: RegraBusca[];
-  tipoMedida?: ConfiguracaoMedidas;
-}
-
-export default function buscarProdutos(
+export default function buscarProdutos<T>(
   produtos: Produto[],
   termosObrigatorios: string[],
-  config: ConfiguracaoBusca,
+  config: ConfiguracaoBusca<T>,
 ) {
   const filtrados = produtos.filter((produto) => {
     const ctx: ContextoBusca = {
@@ -30,32 +22,42 @@ export default function buscarProdutos(
     return config.regras.every((regra) => regra(ctx));
   });
 
+  let resultadosExtracao: ResultadoExtracao<T>[] | undefined;
+
+  if (config.extrator) {
+    const extrator = config.extrator;
+
+    resultadosExtracao = filtrados.map((produto) => ({
+      produto,
+      extracoes: extrator(produto.titulo),
+    }));
+  }
+
   let grupos: Record<string, Produto[]> | undefined;
 
-  if (config.tipoMedida) {
+  if (config.extrator && config.chaveGrupo) {
+    const extrator = config.extrator;
+    const chaveGrupo = config.chaveGrupo;
+
     grupos = {};
 
     for (const produto of filtrados) {
-      const medidas = extrairMedidas(
-        produto.titulo,
-        config.tipoMedida,
+      const extracoes = extrator(produto.titulo);
+
+      const gruposDoProduto = new Set(
+        extracoes.map(chaveGrupo),
       );
 
-      if (medidas.length === 0) {
-        grupos["null"] ??= [];
-        grupos["null"].push(produto);
-        continue;
-      }
-
-      for (const medida of medidas) {
-        grupos[medida] ??= [];
-        grupos[medida].push(produto);
+      for (const grupo of gruposDoProduto) {
+        grupos[grupo] ??= [];
+        grupos[grupo].push(produto);
       }
     }
   }
 
   return {
     filtrados,
+    resultadosExtracao,
     grupos,
   };
 }

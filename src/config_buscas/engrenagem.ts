@@ -1,12 +1,17 @@
-import { ConfiguracaoBusca } from "../busca/buscarProdutos.js";
-import { regraPesquisa, regraSemTermosExcluidos } from "../busca/regras.js";
-import { MARCHAS, Marcha } from "../extratores/marchas.js";
+import { ConfiguracaoBusca } from "../busca/tipos.js";
+import { regraPesquisa, regraSemTermosExcluidos, regraEngrenagem } from "../busca/regras.js";
+import { EngrenagemCambio, MARCHAS, Marcha, extrairEngrenagensCambio } from "../extratores/marchas.js";
 
 const termosExcluidosEngCambio = [
   "partida",
   "pedal",
   "chaveta",
+  "mola",
+  "alavanca",
+  "tacometro",
   "arruela",
+  "retentor",
+  "trava",
   "corrente",
   "trator",
   "M8",
@@ -55,6 +60,7 @@ function criarBuscaEngrenagemCambio({
   return {
     regras: [
       regraPesquisa,
+      regraEngrenagem,
       regraSemTermosExcluidos([
         ...blacklistMarchasExceto(marcha),
         ...termosExcluidosEngCambio,
@@ -133,3 +139,18 @@ export const buscaEngrenagem6AMovida = criarBuscaEngrenagemCambio({
   marcha: "SEXTA",
   tipo: "movida",
 });
+
+export const buscaEngrenagensCambio: ConfiguracaoBusca<EngrenagemCambio> = {
+  regras: [
+    regraPesquisa,
+    regraEngrenagem,
+    regraSemTermosExcluidos(
+      termosExcluidosEngCambio,
+    ),
+  ],
+
+  extrator: extrairEngrenagensCambio,
+
+  chaveGrupo: (engrenagem) =>
+    `${engrenagem.marcha}_${engrenagem.tipo}`,
+};

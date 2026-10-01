@@ -1,4 +1,4 @@
-import { ConfiguracaoBusca } from "../busca/buscarProdutos.js";
+import { ConfiguracaoBusca } from "../busca/tipos.js";
 import { regraPesquisa, regraSemTermosExcluidos } from "../busca/regras.js";
 
 export const buscaEixoPrimario: ConfiguracaoBusca = {
