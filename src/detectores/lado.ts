@@ -1,4 +1,4 @@
-import { Detector } from "../busca/tipos.js";
+import { Detector } from "../main/tipos.js";
 import normalizarTexto from "../util/normalizarTexto.js";
 
 export type Lado = "esquerdo" | "direito";

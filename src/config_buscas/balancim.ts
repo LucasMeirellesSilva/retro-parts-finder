@@ -1,5 +1,5 @@
-import { ConfiguracaoBusca } from "../busca/tipos.js";
-import { regraPesquisa, regraPossuiIdentificadorBalancim, regraPossuiTipoValvula, regraSemTermosExcluidos } from "../busca/regras.js";
+import { ConfiguracaoBusca } from "../main/tipos.js";
+import { regraPesquisa, regraPossuiIdentificadorBalancim, regraPossuiTipoValvula, regraSemTermosExcluidos } from "../main/regras.js";
 import { ExtracaoBalancim, extrairBalancim } from "../extratores/balancins.js";
 
 const termosExcluidosBalancim = [

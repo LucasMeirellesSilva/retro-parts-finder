@@ -1,4 +1,4 @@
-import { DetectorMultiplos } from "../busca/tipos.js";
+import { DetectorMultiplos } from "../main/tipos.js";
 import normalizarTexto from "../util/normalizarTexto.js";
 
 export type IdentificadorBalancim = "A" | "B" | "C";

@@ -1,10 +1,8 @@
-import { ConfiguracaoBusca } from "../busca/tipos.js";
-import { regraPesquisa } from "../busca/regras.js";
+import { ConfiguracaoBusca } from "../main/tipos.js";
+import { regraPesquisa } from "../main/regras.js";
 
-const buscaGenerica: ConfiguracaoBusca = {
+export const buscaGenerica: ConfiguracaoBusca = {
   regras: [
     regraPesquisa,
   ],
 };
-
-export default buscaGenerica;

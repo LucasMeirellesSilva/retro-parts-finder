@@ -1,4 +1,4 @@
-import type { Extrator } from "../busca/tipos.js";
+import type { Extrator } from "../main/tipos.js";
 import {
   detectarIdentificadoresBalancim,
   IdentificadorBalancim,

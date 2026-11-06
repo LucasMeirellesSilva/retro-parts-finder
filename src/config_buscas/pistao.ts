@@ -1,4 +1,4 @@
-import { ConfiguracaoBusca } from "../busca/tipos.js";
+import { ConfiguracaoBusca } from "../main/tipos.js";
 import { MEDIDAS, criarExtratorMedidas } from "../extratores/medidas.js";
 import {
   regraPesquisa,
@@ -9,7 +9,7 @@ import {
   regraSemTermosExcluidos,
   regraPistaoComAneis,
   regraNaoIncompleto,
-} from "../busca/regras.js";
+} from "../main/regras.js";
 
 export const buscaPistao: ConfiguracaoBusca<string> = {
   regras: [

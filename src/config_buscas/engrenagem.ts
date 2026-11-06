@@ -1,5 +1,5 @@
-import { ConfiguracaoBusca } from "../busca/tipos.js";
-import { regraPesquisa, regraSemTermosExcluidos, regraEngrenagem } from "../busca/regras.js";
+import { ConfiguracaoBusca } from "../main/tipos.js";
+import { regraPesquisa, regraSemTermosExcluidos, regraEngrenagem } from "../main/regras.js";
 import { EngrenagemCambio, MARCHAS, Marcha, extrairEngrenagensCambio } from "../extratores/marchas.js";
 
 const termosExcluidosEngCambio = [
@@ -37,7 +37,7 @@ const termosExcluidosPorTipo = {
 };
 
 interface ConfiguracaoBuscaEngrenagemCambio {
-  marcha: Marcha;
+  marchas: Marcha[];
   tipo: "motora" | "movida";
 }
 
@@ -54,7 +54,7 @@ function blacklistMarchasExceto(...marchasPermitidas: Marcha[]) {
 }
 
 function criarBuscaEngrenagemCambio({
-  marcha,
+  marchas,
   tipo,
 }: ConfiguracaoBuscaEngrenagemCambio): ConfiguracaoBusca {
   return {
@@ -62,7 +62,7 @@ function criarBuscaEngrenagemCambio({
       regraPesquisa,
       regraEngrenagem,
       regraSemTermosExcluidos([
-        ...blacklistMarchasExceto(marcha),
+        ...blacklistMarchasExceto(...marchas),
         ...termosExcluidosEngCambio,
         ...termosExcluidosPorTipo[tipo],
       ]),
@@ -71,72 +71,72 @@ function criarBuscaEngrenagemCambio({
 }
 
 export const buscaEngrenagem1AMotora = criarBuscaEngrenagemCambio({
-  marcha: "PRIMEIRA",
+  marchas: ["PRIMEIRA"],
   tipo: "motora",
 });
 
 export const buscaEngrenagem1AMovida = criarBuscaEngrenagemCambio({
-  marcha: "PRIMEIRA",
+  marchas: ["PRIMEIRA"],
   tipo: "movida",
 });
 
 export const buscaEngrenagem2AMotora = criarBuscaEngrenagemCambio({
-  marcha: "SEGUNDA",
+  marchas: ["SEGUNDA"],
   tipo: "motora",
 });
 
 export const buscaEngrenagem2AMovida = criarBuscaEngrenagemCambio({
-  marcha: "SEGUNDA",
+  marchas: ["SEGUNDA"],
   tipo: "movida",
 });
 
 export const buscaEngrenagem3AMotora = criarBuscaEngrenagemCambio({
-  marcha: "TERCEIRA",
+  marchas: ["TERCEIRA"],
   tipo: "motora",
 });
 
 export const buscaEngrenagem3AMovida = criarBuscaEngrenagemCambio({
-  marcha: "TERCEIRA",
+  marchas: ["TERCEIRA"],
   tipo: "movida",
 });
 
 export const buscaEngrenagem4AMotora = criarBuscaEngrenagemCambio({
-  marcha: "QUARTA",
+  marchas: ["QUARTA"],
   tipo: "motora",
 });
 
 export const buscaEngrenagem4AMovida = criarBuscaEngrenagemCambio({
-  marcha: "QUARTA",
+  marchas: ["QUARTA"],
   tipo: "movida",
 });
 
 export const buscaEngrenagem3A4AMotora = criarBuscaEngrenagemCambio({
-  marcha: "TERCEIRA_QUARTA",
+  marchas: ["TERCEIRA_QUARTA", "TERCEIRA", "QUARTA"],
   tipo: "motora",
 });
 
 export const buscaEngrenagem3A4AMovida = criarBuscaEngrenagemCambio({
-  marcha: "TERCEIRA_QUARTA",
+  marchas: ["TERCEIRA_QUARTA", "TERCEIRA", "QUARTA"],
   tipo: "movida",
 });
 
 export const buscaEngrenagem5AMotora = criarBuscaEngrenagemCambio({
-  marcha: "QUINTA",
+  marchas: ["QUINTA"],
   tipo: "motora",
 });
 
 export const buscaEngrenagem5AMovida = criarBuscaEngrenagemCambio({
-  marcha: "QUINTA",
+  marchas: ["QUINTA"],
   tipo: "movida",
 });
 
 export const buscaEngrenagem6AMotora = criarBuscaEngrenagemCambio({
-  marcha: "SEXTA",
+  marchas: ["SEXTA"],
   tipo: "motora",
 });
 
 export const buscaEngrenagem6AMovida = criarBuscaEngrenagemCambio({
-  marcha: "SEXTA",
+  marchas: ["SEXTA"],
   tipo: "movida",
 });
 

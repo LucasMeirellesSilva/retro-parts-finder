@@ -72,6 +72,7 @@ export const regraPistaoComAneis: RegraBusca = ({ titulo }) => {
   );
 };
 
+
 export const regraEngrenagem: RegraBusca = ({ titulo }) =>
   titulo.includes("engrenagem");
 

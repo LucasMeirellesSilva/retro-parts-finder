@@ -1,4 +1,4 @@
-import { Extrator } from "../busca/tipos.js";
+import { Extrator } from "../main/tipos.js";
 
 export type ConfiguracaoMedidas = {
   inicial: number;

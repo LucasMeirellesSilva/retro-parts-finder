@@ -1,24 +1,14 @@
-import { chromium, Page } from "playwright";
+import { chromium } from "playwright";
 
-import gerarUrl from "./busca/gerarUrl.js";
-import buscarProdutos from "./busca/buscarProdutos.js";
-import { Produto } from "./busca/tipos.js";
+import gerarUrl from "./main/gerarUrl.js";
+import encontrarProdutos from "./main/encontrarProdutos.js";
+import { ArgumentosPesquisa, Produto } from "./main/tipos.js";
+import { buscaArvoreComandoValvulas } from "./config_buscas/arvoreComandoValvulas.js";
 
-import { buscaBalamcimB } from "./config_buscas/balancins.js";
 
-const pesquisaInput = "Balancim B Xlx 250";
+const pesquisaInput = "Arvore Comando Turuna Xls";
 const grupoInput = "";
 
-type ScrapperArgs = {
-  page: Page;
-  pesquisa: string;
-  paginaAtual: number;
-  grupo?: string;
-  resultados?: {
-    filtrados: Produto[];
-    grupos: Record<string, Produto[]>;
-  };
-};
 
 const context = await chromium.launchPersistentContext("./scraping-ml", {
   headless: false,
@@ -44,7 +34,7 @@ async function testar({
     filtrados: [],
     grupos: {},
   },
-}: ScrapperArgs): Promise<void> {
+}: ArgumentosPesquisa): Promise<void> {
   const url = gerarUrl({
     pesquisa,
     pagina: paginaAtual,
@@ -90,12 +80,12 @@ async function testar({
       }),
     );
 
-  const termosObrigatorios = ["xlx", "250"];
+  const termosObrigatorios = ["turuna"];
 
-  const resultadoAtual = buscarProdutos(
+  const resultadoAtual = encontrarProdutos(
     produtos,
     termosObrigatorios,
-    buscaBalamcimB,
+    buscaArvoreComandoValvulas,
   );
 
   const gruposAcumulados = {
@@ -125,7 +115,7 @@ async function testar({
 
   const minimoResultados = grupo ? 3 : 10;
 
-  if (totalResultados < minimoResultados && paginaAtual < 5) {
+  if (totalResultados < minimoResultados && paginaAtual < 3) {
     return testar({
       page,
       pesquisa,

@@ -45,10 +45,11 @@ export default function gerarUrl({
   }
 
   // const marcaMl = `_BRAND_${12084392}`
-  const categoriaMl = `acessorios-veiculos/`
+  // const categoriaMl = `acessorios-veiculos/pecas-motos-quadriciclos/motor/`
 
-  // const categoriaMl = ``
+  const marcaMl = ``
+  const categoriaMl = ``
   
 
-  return `https://lista.mercadolivre.com.br/${categoriaMl}${slug}_CustoFrete_Gratis${paginaMl}${ordenacaoMl}_NoIndex_True`;
+  return `https://lista.mercadolivre.com.br/${categoriaMl}${slug}_CustoFrete_Gratis${paginaMl}${marcaMl}${ordenacaoMl}_NoIndex_True`;
 }

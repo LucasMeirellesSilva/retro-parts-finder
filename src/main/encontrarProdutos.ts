@@ -7,7 +7,7 @@ import {
 
 import normalizarTexto from "../util/normalizarTexto.js";
 
-export default function buscarProdutos<T>(
+export default function encontrarProdutos<T>(
   produtos: Produto[],
   termosObrigatorios: string[],
   config: ConfiguracaoBusca<T>,
